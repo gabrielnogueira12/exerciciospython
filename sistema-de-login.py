@@ -5,7 +5,6 @@ def verification(user, password, users):
     return False
 
 
-id_user = {'Username': '', 'Password': ''}
 users = []
 
 menu = True
@@ -14,8 +13,7 @@ while menu:
     menu = input('Escolha sua opção:\n1. Cadastrar novo usuário\n2. Fazer login\n3. Sair\n')
 
     if menu == '1':
-        id_user['Username'] = input('Digite o seu username: ')
-        id_user['Password'] = input('Digite sua senha: ')
+        id_user = {'Username': input('Digite o seu username: '), 'Password': input('Digite sua senha: ')}
         users.append(id_user)
 
     elif menu == '2':
@@ -29,7 +27,7 @@ while menu:
             username_login = input('Digite seu username: ')
             password_login = input('Digite sua senha: ')
             verif = verification(username_login, password_login, users)
-        if error == 2:
+        if error == 2 and not verif:
             print('Você excedeu o número de tentativas! Tente novamente mais tarde.')
         else:
             print('Login bem sucedido!')
