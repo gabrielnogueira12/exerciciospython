@@ -1,3 +1,5 @@
+from random import randint
+
 tabuleiro = [['*', '*', '*'], ['*', '*', '*'], ['*', '*', '*']]
 
 
@@ -10,6 +12,15 @@ def jogada_humana():
     while coluna < 1 or coluna > 3:
         coluna = int(input('Número de coluna inválido! Digite novamente\nNúmero de coluna: '))
     return linha-1, coluna-1
+
+
+def jogada_computador(x):
+    linha = randint(0, 2)
+    coluna = randint(0, 2)
+    while x[linha][coluna] != '*':
+        linha = randint(0, 2)
+        coluna = randint(0, 2)
+    return linha, coluna
 
 
 def mostrar_tabuleiro(z):
@@ -46,39 +57,70 @@ def vitoria_diagonal(z):
 
 def tie(z):
     for y in z:
-        for x in y:
-            if x == '*':
-                return False
+        velha = any(x == '*' for x in y)
+        if velha:
+            return False
     return True
 
 
-print('Este é um jogo da velha. Para jogar, você deve inserir o número da linha e da coluna em que quer jogar.\n\n'
-      'O primeiro jogador será X e o segundo será a O. Boa sorte e se divirta!\n')
-win = False
-mostrar_tabuleiro(tabuleiro)
 vez = 0
+win = False
+
+print('Este é um jogo da velha. Para jogar, você deve inserir o número da linha e da coluna em que quer jogar.\n')
+pvp = int(input('Digite a escolha de modo de jogo:\n1. Jogar contra outra pessoa\n2. Jogar contra o computador\n'))
+while pvp != 1 and pvp != 2:
+    pvp = int(input('NÚMERO INVÁLIDO! Digite novamente a escolha de modo de jogo:\n1. Jogar contra outra pessoa\n'
+                    '2. Jogar contra o computador\n'))
+
+mostrar_tabuleiro(tabuleiro)
 
 while not win:
-    jogada = jogada_humana()
-    if vez % 2 == 0:
-        while tabuleiro[jogada[0]][jogada[1]] != '*':
-            print('ERRO. A casa já está ocupada! Digite outra coordenada!')
-            jogada = jogada_humana()
-        tabuleiro[jogada[0]][jogada[1]] = 'X'
+    if pvp == 1:
+        print('A primeira pessoa a jogar será o X, e a segunda será o O. Boa sorte e se divirta!')
+
+        jogada = jogada_humana()
+
+        if vez % 2 == 0:
+            while tabuleiro[jogada[0]][jogada[1]] != '*':
+                print('ERRO. A casa já está ocupada! Digite outra coordenada!')
+                jogada = jogada_humana()
+            tabuleiro[jogada[0]][jogada[1]] = 'X'
+
+        else:
+            while tabuleiro[jogada[0]][jogada[1]] != '*':
+                print('ERRO. A casa já está ocupada! Digite outra coordenada!')
+                jogada = jogada_humana()
+            tabuleiro[jogada[0]][jogada[1]] = 'O'
+
+        vez = vez + 1
+        mostrar_tabuleiro(tabuleiro)
+        win_linha = vitoria_linha(tabuleiro)
+        win_coluna = vitoria_coluna(tabuleiro)
+        win_diagonal = vitoria_diagonal(tabuleiro)
+        empate = tie(tabuleiro)
+
     else:
-        while tabuleiro[jogada[0]][jogada[1]] != '*':
-            print('ERRO. A casa já está ocupada! Digite outra coordenada!')
+        if vez % 2 == 0:
             jogada = jogada_humana()
-        tabuleiro[jogada[0]][jogada[1]] = 'O'
-    vez = vez + 1
-    mostrar_tabuleiro(tabuleiro)
-    win_linha = vitoria_linha(tabuleiro)
-    win_coluna = vitoria_coluna(tabuleiro)
-    win_diagonal = vitoria_diagonal(tabuleiro)
-    empate = tie(tabuleiro)
+            while tabuleiro[jogada[0]][jogada[1]] != '*':
+                print('ERRO. A casa já está ocupada! Digite outra coordenada!')
+                jogada = jogada_humana()
+            tabuleiro[jogada[0]][jogada[1]] = 'X'
+
+        else:
+            jogada = jogada_computador(tabuleiro)
+            tabuleiro[jogada[0]][jogada[1]] = 'O'
+
+        vez = vez + 1
+        mostrar_tabuleiro(tabuleiro)
+        win_linha = vitoria_linha(tabuleiro)
+        win_coluna = vitoria_coluna(tabuleiro)
+        win_diagonal = vitoria_diagonal(tabuleiro)
+        empate = tie(tabuleiro)
 
     if win_linha or win_coluna or win_diagonal or empate:
         win = True
+
 
 if win_linha:
     print(f'Parabéns! O {win_linha[1]} venceu!')
