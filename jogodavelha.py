@@ -1,9 +1,14 @@
+# Bibliotecas
 from random import randint
 
-tabuleiro = [['*', '*', '*'], ['*', '*', '*'], ['*', '*', '*']]
+# Funções
 
 
 def jogada_humana():
+    """Permite o usuário colocar dois números e verifica se eles estão dentro dos parâmetros do tabuleiro do jogo da
+    velha (Uma matriz 3x3). Após a verificação, retorna a coordenada que o usuário escreveu -1, para poder ser utilizado
+    na iteração do tabuleiro."""
+
     print('Insira os números posição você quer jogar, a ordem é Linha e Coluna\n')
     linha = int(input('Número da linha: '))
     while linha < 1 or linha > 3:
@@ -15,6 +20,9 @@ def jogada_humana():
 
 
 def jogada_computador(x):
+    """Faz uma jogada aleatória do computador, escolhendo uma linha e uma coluna para formar a coordenada na matriz 3x3
+    que representa o tabuleiro."""
+
     linha = randint(0, 2)
     coluna = randint(0, 2)
     while x[linha][coluna] != '*':
@@ -24,10 +32,13 @@ def jogada_computador(x):
 
 
 def mostrar_tabuleiro(z):
+    """Função que mostra a matriz 3x3 que representa o tabuleiro"""
     [[print(x, end='\t\t', flush=True) for x in y] and print('\n') for y in z]
 
 
 def vitoria_linha(z):
+    """Verifica a vitória do usuário pela linha."""
+
     if z[0][0] == z[0][1] == z[0][2] == 'X' or z[0][0] == z[0][1] == z[0][2] == 'O':
         return True, z[0][0]
     elif z[1][0] == z[1][1] == z[1][2] == 'X' or z[1][0] == z[1][1] == z[1][2] == 'O':
@@ -38,6 +49,8 @@ def vitoria_linha(z):
 
 
 def vitoria_coluna(z):
+    """Verifica a vitória do usuário pela coluna."""
+
     if z[0][0] == z[1][0] == z[2][0] == 'X' or z[0][0] == z[1][0] == z[2][0] == 'O':
         return True, z[0][0]
     elif z[0][1] == z[1][1] == z[2][1] == 'X' or z[0][1] == z[1][1] == z[2][1] == 'O':
@@ -48,6 +61,8 @@ def vitoria_coluna(z):
 
 
 def vitoria_diagonal(z):
+    """Verifica a vitória do usuário pela diagonal."""
+
     if z[0][0] == z[1][1] == z[2][2] == 'X' or z[0][0] == z[1][1] == z[2][2] == 'O':
         return True, z[0][0]
     elif z[0][2] == z[1][1] == z[2][0] == 'X' or z[0][2] == z[1][1] == z[2][0] == 'O':
@@ -56,6 +71,8 @@ def vitoria_diagonal(z):
 
 
 def tie(z):
+    """Verifica se houve empate ou não."""
+
     for y in z:
         velha = any(x == '*' for x in y)
         if velha:
@@ -63,22 +80,29 @@ def tie(z):
     return True
 
 
+# Variáveis para o uso no jogo
+tabuleiro = [['*', '*', '*'], ['*', '*', '*'], ['*', '*', '*']]
 vez = 0
 win = False
 
+# Apresentação e escolha do modo de jogo
 print('Este é um jogo da velha. Para jogar, você deve inserir o número da linha e da coluna em que quer jogar.\n')
 pvp = int(input('Digite a escolha de modo de jogo:\n1. Jogar contra outra pessoa\n2. Jogar contra o computador\n'))
 while pvp != 1 and pvp != 2:
     pvp = int(input('NÚMERO INVÁLIDO! Digite novamente a escolha de modo de jogo:\n1. Jogar contra outra pessoa\n'
                     '2. Jogar contra o computador\n'))
 
+# Lógica do jogo
 mostrar_tabuleiro(tabuleiro)
 
 while not win:
+    # Modo jogador contra jogador
     if pvp == 1:
         print('A primeira pessoa a jogar será o X, e a segunda será o O. Boa sorte e se divirta!')
 
         jogada = jogada_humana()
+
+        # Se a vez for um número par, será jogado o X. Se for ímpar, será jogado o O.
 
         if vez % 2 == 0:
             while tabuleiro[jogada[0]][jogada[1]] != '*':
@@ -92,6 +116,8 @@ while not win:
                 jogada = jogada_humana()
             tabuleiro[jogada[0]][jogada[1]] = 'O'
 
+        # Uso da funções para verificar a vitória ou empate e mostrar o tabuleiro, além da adição da variável
+        # vez para controle das jogadas.
         vez = vez + 1
         mostrar_tabuleiro(tabuleiro)
         win_linha = vitoria_linha(tabuleiro)
@@ -99,6 +125,7 @@ while not win:
         win_diagonal = vitoria_diagonal(tabuleiro)
         empate = tie(tabuleiro)
 
+    # Modo jogador contra computador
     else:
         if vez % 2 == 0:
             jogada = jogada_humana()
@@ -111,6 +138,8 @@ while not win:
             jogada = jogada_computador(tabuleiro)
             tabuleiro[jogada[0]][jogada[1]] = 'O'
 
+        # Uso da funções para verificar a vitória ou empate e mostrar o tabuleiro, além da adição da variável
+        # vez para controle das jogadas.
         vez = vez + 1
         mostrar_tabuleiro(tabuleiro)
         win_linha = vitoria_linha(tabuleiro)
@@ -118,10 +147,11 @@ while not win:
         win_diagonal = vitoria_diagonal(tabuleiro)
         empate = tie(tabuleiro)
 
+    # Verificação da condição de vitória ou empate
     if win_linha or win_coluna or win_diagonal or empate:
         win = True
 
-
+# Parabenização e apresentação do vencedor
 if win_linha:
     print(f'Parabéns! O {win_linha[1]} venceu!')
 elif win_diagonal:
