@@ -95,12 +95,21 @@ tabuleiro = [['*', '*', '*'], ['*', '*', '*'], ['*', '*', '*']]
 vez = 0
 win = False
 
-# Apresentação e escolha do modo de jogo
+# Apresentação, escolha do modo de jogo e de quem jogará primeiro: X ou O
 print('Este é um jogo da velha. Para jogar, você deve inserir o número da linha e da coluna em que quer jogar.\n')
 pvp = int(input('Digite a escolha de modo de jogo:\n1. Jogar contra outra pessoa\n2. Jogar contra o computador\n'))
 while pvp != 1 and pvp != 2:
     pvp = int(input('NÚMERO INVÁLIDO! Digite novamente a escolha de modo de jogo:\n1. Jogar contra outra pessoa\n'
                     '2. Jogar contra o computador\n'))
+
+primeira_escolha = input('A primeira jogada será X ou O? ').upper()
+while primeira_escolha != 'X' and primeira_escolha != 'O':
+    primeira_escolha = input('ESCOLHA INVÁLIDA! Digite novamente\nA primeira jogada será X ou O? ').upper()
+
+if primeira_escolha == 'X':
+    segunda_escolha = 'O'
+else:
+    segunda_escolha = 'X'
 
 # Lógica do jogo
 mostrar_tabuleiro(tabuleiro)
@@ -108,8 +117,6 @@ mostrar_tabuleiro(tabuleiro)
 while not win:
     # Modo jogador contra jogador
     if pvp == 1:
-        print('A primeira pessoa a jogar será o X, e a segunda será o O. Boa sorte e se divirta!')
-
         jogada = jogada_humana()
 
         # Se a vez for um número par, será jogado o X. Se for ímpar, será jogado o O.
@@ -119,7 +126,7 @@ while not win:
                 while tabuleiro[jogada[0]][jogada[1]] != '*':
                     print('ERRO. A casa já está ocupada! Digite outra coordenada!')
                     jogada = jogada_humana()
-                tabuleiro[jogada[0]][jogada[1]] = 'X'
+                tabuleiro[jogada[0]][jogada[1]] = f'{primeira_escolha}'
             except TypeError:
                 vez = 1
                 print('Jogue novamente!\n')
@@ -128,7 +135,7 @@ while not win:
                 while tabuleiro[jogada[0]][jogada[1]] != '*':
                     print('ERRO. A casa já está ocupada! Digite outra coordenada!')
                     jogada = jogada_humana()
-                tabuleiro[jogada[0]][jogada[1]] = 'O'
+                tabuleiro[jogada[0]][jogada[1]] = f'{segunda_escolha}'
             except TypeError:
                 vez = 0
                 print('Jogue novamente!\n')
@@ -150,14 +157,14 @@ while not win:
                 while tabuleiro[jogada[0]][jogada[1]] != '*':
                     print('ERRO. A casa já está ocupada! Digite outra coordenada!')
                     jogada = jogada_humana()
-                tabuleiro[jogada[0]][jogada[1]] = 'X'
+                tabuleiro[jogada[0]][jogada[1]] = f'{primeira_escolha}'
             except TypeError:
                 vez = 1
                 print('Jogue novamente!\n')
 
         else:
             jogada = jogada_computador(tabuleiro)
-            tabuleiro[jogada[0]][jogada[1]] = 'O'
+            tabuleiro[jogada[0]][jogada[1]] = f'{segunda_escolha}'
 
         # Uso da funções para verificar a vitória ou empate e mostrar o tabuleiro, além da adição da variável
         # vez para controle das jogadas.
