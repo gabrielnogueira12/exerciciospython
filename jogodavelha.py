@@ -9,14 +9,23 @@ def jogada_humana():
     velha (Uma matriz 3x3). Após a verificação, retorna a coordenada que o usuário escreveu -1, para poder ser utilizado
     na iteração do tabuleiro."""
 
-    print('Insira os números posição você quer jogar, a ordem é Linha e Coluna\n')
-    linha = int(input('Número da linha: '))
-    while linha < 1 or linha > 3:
-        linha = int(input('Número de linha inválido! Digite novamente\nNúmero de linha: '))
-    coluna = int(input('\nNúmero da coluna: '))
-    while coluna < 1 or coluna > 3:
-        coluna = int(input('Número de coluna inválido! Digite novamente\nNúmero de coluna: '))
-    return linha-1, coluna-1
+    try:
+        linha = int(input('Insira os números posição você quer jogar, a ordem é Linha e Coluna\nNúmero da linha: '))
+        while linha < 1 or linha > 3:
+            linha = int(input('Número de linha inválido! Digite novamente\nNúmero de linha: '))
+    except ValueError:
+        print('Deve ser colocado um número inteiro, e não uma string ou número fracionário (float).')
+        return None
+
+    try:
+        coluna = int(input('\nNúmero da coluna: '))
+        while coluna < 1 or coluna > 3:
+            coluna = int(input('Número de coluna inválido! Digite novamente\nNúmero de coluna: '))
+    except ValueError:
+        print('Deve ser colocado um número inteiro, e não uma string ou número fracionário (float).')
+        return None
+
+    return linha - 1, coluna - 1
 
 
 def jogada_computador(x):
@@ -34,6 +43,7 @@ def jogada_computador(x):
 def mostrar_tabuleiro(z):
     """Função que mostra a matriz 3x3 que representa o tabuleiro"""
     [[print(x, end='\t\t', flush=True) for x in y] and print('\n') for y in z]
+    print('\n')
 
 
 def vitoria_linha(z):
@@ -105,16 +115,23 @@ while not win:
         # Se a vez for um número par, será jogado o X. Se for ímpar, será jogado o O.
 
         if vez % 2 == 0:
-            while tabuleiro[jogada[0]][jogada[1]] != '*':
-                print('ERRO. A casa já está ocupada! Digite outra coordenada!')
-                jogada = jogada_humana()
-            tabuleiro[jogada[0]][jogada[1]] = 'X'
-
+            try:
+                while tabuleiro[jogada[0]][jogada[1]] != '*':
+                    print('ERRO. A casa já está ocupada! Digite outra coordenada!')
+                    jogada = jogada_humana()
+                tabuleiro[jogada[0]][jogada[1]] = 'X'
+            except TypeError:
+                vez = 1
+                print('Jogue novamente!\n')
         else:
-            while tabuleiro[jogada[0]][jogada[1]] != '*':
-                print('ERRO. A casa já está ocupada! Digite outra coordenada!')
-                jogada = jogada_humana()
-            tabuleiro[jogada[0]][jogada[1]] = 'O'
+            try:
+                while tabuleiro[jogada[0]][jogada[1]] != '*':
+                    print('ERRO. A casa já está ocupada! Digite outra coordenada!')
+                    jogada = jogada_humana()
+                tabuleiro[jogada[0]][jogada[1]] = 'O'
+            except TypeError:
+                vez = 0
+                print('Jogue novamente!\n')
 
         # Uso da funções para verificar a vitória ou empate e mostrar o tabuleiro, além da adição da variável
         # vez para controle das jogadas.
@@ -129,10 +146,14 @@ while not win:
     else:
         if vez % 2 == 0:
             jogada = jogada_humana()
-            while tabuleiro[jogada[0]][jogada[1]] != '*':
-                print('ERRO. A casa já está ocupada! Digite outra coordenada!')
-                jogada = jogada_humana()
-            tabuleiro[jogada[0]][jogada[1]] = 'X'
+            try:
+                while tabuleiro[jogada[0]][jogada[1]] != '*':
+                    print('ERRO. A casa já está ocupada! Digite outra coordenada!')
+                    jogada = jogada_humana()
+                tabuleiro[jogada[0]][jogada[1]] = 'X'
+            except TypeError:
+                vez = 1
+                print('Jogue novamente!\n')
 
         else:
             jogada = jogada_computador(tabuleiro)
