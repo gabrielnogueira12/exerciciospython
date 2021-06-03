@@ -1,6 +1,15 @@
-from csv import reader
+import sistemadeusuario
+from csv import DictWriter
 
-with open('lutadores.csv') as arquivo:
-    leitor_csv = reader(arquivo)
-    for linha in leitor_csv:
-        print(f'{linha[0]} | {linha[1]} | {linha[2]}')
+with open('bancodeusuarios.csv', 'w') as arquivo:
+    cabecalho = sistemadeusuario.User.usersbank[0].keys()
+    escrever_csv = DictWriter(arquivo, fieldnames=cabecalho)
+    escrever_csv.writeheader()
+    for usuario in sistemadeusuario.User.usersbank:
+        escrever_csv.writerow({'username': usuario['username'],
+                               'password': usuario['password'],
+                               'id': usuario['id'],
+                               'completeName': usuario['completeName'],
+                               'birthdayDate': usuario['birthdayDate'],
+                               'gender': usuario['gender'],
+                               'email': usuario['email']})
