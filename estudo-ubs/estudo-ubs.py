@@ -24,9 +24,10 @@ for cidade in range(len(codMunic)):
         if contador == codMunic[cidade][0]:
             countUbs += 1
     nomeEstado = codMunic[cidade][1][0:2]
-    nomeCidade = codMunic[cidade][1][3::].title()
+    nomeCidade = codMunic[cidade][1][2::].title()
     numeroMunicUbs.append({'Estado': nomeEstado, 'Cidade': nomeCidade, 'Qntd': countUbs})
 
 for contador in range(len(numeroMunicUbs)):  # Imprime o resultado na tela
-    print(f"Estado: {numeroMunicUbs[contador]['Estado']}\tCidade: {numeroMunicUbs[contador]['Cidade']}\t"
-          f"Número de UBS: {numeroMunicUbs[contador]['Qntd']}")
+    print(f"Estado: {numeroMunicUbs[contador]['Estado']}", end='\t\t', flush=True)
+    print(f"Cidade: {numeroMunicUbs[contador]['Cidade']}".ljust(40), end='\t\t', flush=True)
+    print(f"Número de UBS: {numeroMunicUbs[contador]['Qntd']}".ljust(15), end='\n', flush=True)
