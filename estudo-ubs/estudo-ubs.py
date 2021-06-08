@@ -1,4 +1,15 @@
 from csv import DictReader, reader
+from os import system
+
+
+def procura_cidade(lista, city, estado):
+    for cont in lista:
+        if cont['Cidade'].upper() == city.upper() and cont['Estado'].upper() == estado.upper():
+            print(f"{cont['Cidade']} - {cont['Estado']} tem {cont['Qntd']} unidades básicas de saúde.")
+            return True
+    print('A cidade não se encontra na lista.')
+    return False
+
 
 with open('ubs.csv', encoding='utf-8') as ubs:  # Lê os dados sobre as UBS
     ler_ubs = DictReader(ubs)
@@ -27,7 +38,13 @@ for cidade in range(len(codMunic)):
     nomeCidade = codMunic[cidade][1][2::].title()
     numeroMunicUbs.append({'Estado': nomeEstado, 'Cidade': nomeCidade, 'Qntd': countUbs})
 
-for contador in range(len(numeroMunicUbs)):  # Imprime o resultado na tela
-    print(f"Estado: {numeroMunicUbs[contador]['Estado']}", end='\t\t', flush=True)
-    print(f"Cidade: {numeroMunicUbs[contador]['Cidade']}".ljust(40), end='\t\t', flush=True)
-    print(f"Número de UBS: {numeroMunicUbs[contador]['Qntd']}".ljust(15), end='\n', flush=True)
+controle_menu = True
+while controle_menu is True:
+    escolha_cidade = input("Digite o nome da cidade que você quer consultar ou digite 'SAIR': ")
+    if escolha_cidade.upper() == 'SAIR':
+        controle_menu = False
+        break
+    escolha_estado = input('Digite a sigla do estado em que está a cidade: ')
+    procura_cidade(numeroMunicUbs, escolha_cidade, escolha_estado)
+
+system('pause')
