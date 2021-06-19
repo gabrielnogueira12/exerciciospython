@@ -1,4 +1,5 @@
 from passlib.hash import pbkdf2_sha256 as cryp
+import datetime
 
 
 class User:
@@ -10,7 +11,7 @@ class User:
         self.username = None
         self.__password = None
         self.completename = None
-        self.birthdaydate = None
+        self.birthday = None
         self.gender = None
         self.email = None
         self.id = None
@@ -45,35 +46,37 @@ class User:
         self.completename = input('\nDigite o seu nome completo: ')
 
         # Controlling birthday date
-        self.birthdaydate = input('\nDigite sua data de nascimento (dd/mm/aaaa): ')
+        birthdaydate = input('\nDigite sua data de nascimento (dd/mm/aaaa): ')
 
         birthday_loop = True
         while birthday_loop:
-            birthday_control = self.birthdaydate.split('/')
+            birthday_control = birthdaydate.split('/')
             if len(birthday_control) == 3:
                 try:
                     if len(birthday_control[0]) == 2 and len(birthday_control[1]) == 2 and \
                             len(birthday_control[2]) == 4:
                         if int(birthday_control[0]) <= 0 or int(birthday_control[0]) > 31:
-                            self.birthdaydate = input(
+                            birthdaydate = input(
                                 'Data inválida! Digite novamente sua data de nascimento (dd/mm/aaaa): ')
                         else:
                             if int(birthday_control[1]) <= 0 or int(birthday_control[1]) > 12:
-                                self.birthdaydate = input(
+                                birthdaydate = input(
                                     'Data inválida! Digite novamente sua data de nascimento (dd/mm/aaaa): ')
                             else:
                                 if int(birthday_control[2]) < 0:
-                                    self.birthdaydate = input(
+                                    birthdaydate = input(
                                         'Data inválida! Digite novamente sua data de nascimento (dd/mm/aaaa): ')
                                 else:
                                     birthday_loop = False
                     else:
-                        self.birthdaydate = input(
+                        birthdaydate = input(
                             'Data inválida! Digite novamente sua data de nascimento (dd/mm/aaaa): ')
                 except ValueError:
-                    self.birthdaydate = input('Data inválida! Digite novamente sua data de nascimento (dd/mm/aaaa): ')
+                    birthdaydate = input('Data inválida! Digite novamente sua data de nascimento (dd/mm/aaaa): ')
             else:
-                self.birthdaydate = input('Data inválida! Digite novamente sua data de nascimento (dd/mm/aaaa): ')
+                birthdaydate = input('Data inválida! Digite novamente sua data de nascimento (dd/mm/aaaa): ')
+
+        self.birthday = datetime.datetime.strptime(birthdaydate, '%d/%m/%Y')
 
         # Controlling gender
         self.gender = input('\nDigite seu gênero (M/F): ').upper()
@@ -91,7 +94,7 @@ class User:
 
         # Adding the new user on the system
         User.usersbank.append({'username': self.username, 'password': self.__password, 'id': self.id,
-                               'completeName': self.completename, 'birthdayDate': self.birthdaydate,
+                               'completeName': self.completename, 'birthdayDate': self.birthday,
                                'gender': self.gender, 'email': self.email})
 
 
@@ -112,7 +115,8 @@ def check_user(username):
         if User.usersbank[contador]['username'] == username:
             print(f'Nome de usuário: {User.usersbank[contador]["username"]}\n'
                   f'Nome completo: {User.usersbank[contador]["completeName"]}\n'
-                  f'Data de nascimento: {User.usersbank[contador]["birthdayDate"]}\n'
+                  f'Data de nascimento: {User.usersbank[contador]["birthdayDate"].day}/'
+                  f'{User.usersbank[contador]["birthdayDate"].month}/{User.usersbank[contador]["birthdayDate"].year}\n'
                   f'Gênero: {User.usersbank[contador]["gender"]}\n'
                   f'Email: {User.usersbank[contador]["email"]}')
             return True
@@ -181,7 +185,8 @@ def change_user(username):
                             'Data inválida! Digite novamente sua data de nascimento (dd/mm/aaaa): ')
                 else:
                     new_birthdaydate = input('Data inválida! Digite novamente sua data de nascimento (dd/mm/aaaa): ')
-            User.usersbank[contador]["birthdayDate"] = new_birthdaydate
+            new_birthdaydate_format = datetime.datetime.strptime(new_birthdaydate, '%d/%m/%Y')
+            User.usersbank[contador]["birthdayDate"] = new_birthdaydate_format
 
             # New gender
             new_gender = input('Digite o gênero (M/F): ')
