@@ -1,7 +1,6 @@
-import lol_project.functions.functions as func
+from lol_project.functions.functions import adjust_df, show_match
 
-print(func.find('blueTeamTag', 'NALCS', 2018, 'Spring', 'Season'))
-x = func.find_matches('NALCS', 2018, 'TL')
-for y in x:
-    print(y)
-# print(func.find('redTeamTag', 'CBLoL', 2017, 'Spring', 'Season', 'RED'))
+chosen_df = adjust_df('CBLoL', 1)
+print(chosen_df)
+
+# show_match(chosen_df[1])
